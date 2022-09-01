@@ -40,9 +40,9 @@ df_mean = df.groupby(['Brand']).mean()
 
 #Show Graph
 # plt.figure(figsize=[12,8])
-# index = df_mean.index
-# start_p = df_mean['Starting Price']
-# end_p = df_mean['Ending Price']
+index = df_mean.index
+start_p = df_mean['Starting Price']
+end_p = df_mean['Ending Price']
 
 # plt.barh(range(len(index)), width=[h-b for h, b in zip(start_p, end_p)], left=start_p, align='center')
 # plt.yticks(range(len(index)), index)
@@ -66,8 +66,18 @@ col3.metric("Average Rating", float("{:.2f}".format(df['Rating'].mean())))
 st.subheader('Raw Data')
 st.dataframe(df)
 
-#Graph 1
-fig, ax = plt.subplots(range(len(index)), width=[h-b for h, b in zip(start_p, end_p)], left=start_p, align='center')
-ax.barh()
+#Graph 1 with price limiter
+st.subheader('Explore Cars Within Your Budgets')
+price_limiter = st.slider("Price Range", value=[0,700000], step=50000)
+
+fig, ax = plt.subplots(figsize=[10,8])
+ax.barh(range(len(index)), width=[h-b for h, b in zip(start_p, end_p)], left=start_p, align='center')
+plt.yticks(range(len(index)), index)
+plt.grid()
+plt.title("Average Price Range of Car Brands ($)")
+plt.xlim(price_limiter[0],price_limiter[1])
+
+plt.tight_layout()
 st.pyplot(fig)
+
 
